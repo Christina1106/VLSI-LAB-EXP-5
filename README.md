@@ -1,14 +1,13 @@
-# SIMULATION AND IMPLEMENTATION OF FINITE STATE MACHINE
+# VLSI-LAB-EXP-5
+SIMULATION AND IMPLEMENTATION OF FINITE STATE MACHINE
 
-## AIM: 
-To simulate and synthesis finite state machine using Xilinx ISE.
+# AIM: 
+To simulate and synthesis finite state machine using Vivado 2023.2.
 
-## APPARATUS REQUIRED:
+# APPARATUS REQUIRED: 
+Vivado 2023.2
 
-Xilinx 14.7 
-Spartan6 FPGA
-
-## PROCEDURE: 
+# PROCEDURE:
 STEP:1 Start the Xilinx navigator, Select and Name the New project.
 STEP:2 Select the device family, device, package and speed. 
 STEP:3 Select new source in the New Project and select Verilog Module as the Source type. 
@@ -22,102 +21,81 @@ STEP:10 Double click on the Implement Design and double click on the Generate Pr
 STEP:11 On the board, by giving required input, the LEDs starts to glow light, indicating the output.
 STEP:12 Load the Bit file into the SPARTAN 6 FPGA 
 
-## Finite State Machine:
-
-### Logic Diagram :
+# Logic Diagram :
 
 ![image](https://github.com/navaneethans/VLSI-LAB-EXP-5/assets/6987778/34ec5d63-2b3b-4511-81ef-99f4572d5869)
 
-### Verilog Code :
+
+# VERILOG CODE:
 ```
-module fsm( clk, rst, inp, outp);
+module fsm(clk, rst, x, z);
 
-input clk, rst, inp;
+input clk, rst, x;
 
-output outp;
+output z;
 
-reg [1:0] state;
+reg [2:1] present_state, NEXT_STATE;
 
-reg outp;
+parameter S0=2'b00, S1=2'b01, S2=2'b10, S3=2'b11;
 
-always @(posedge clk, posedge rst)
+always@(x,present_state)
 
-begin
+case(present_state)
 
-if(rst)
+S0: if(x)
 
-state<=2'b00;
+NEXT_STATE=S1;
 
 else
 
-begin
+NEXT_STATE=S0;
 
-case(state)
+S1: if(x)
 
-2'b00:
+NEXT_STATE=S1;
 
-begin
+else
 
-if(inp) state <=2'b01;
+NEXT_STATE=S2;
 
+S2: if(x)
 
+NEXT_STATE=S3;
 
-else state <=2'b10;
-end
+else
 
-2'b01:
+NEXT_STATE=S0;
 
-begin
+S3: if(x)
 
-if (inp) state <=2'b11;
-else state<=2'b10;
-end
+NEXT_STATE=S1;
 
-2'b10:
-begin
-if (inp) state<=2'b01;
-else state <=2'b11;
-end
+else
 
-2'b11:
-
-begin
-
-if (inp) state <=2'b01;
-else state <=2'b10;
-
-end
+NEXT_STATE=S2;
 
 endcase
 
-end
-
-end
-
-always @(posedge clk, posedge rst)
-
-begin
+always@(negedge rst, posedge clk)
 
 if(rst)
 
-outp <= 0;
+present_state<=S0;
 
-else if(state == 2'b11)
+else
 
-outp <= 1;
+present_state<=NEXT_STATE;
 
-else outp<= 0;
-
-end
+assign z=(present_state==S3);
 
 endmodule
 ```
-### Output:
-
-![fsm1](https://github.com/Dhinesh0024/VLSI-LAB-EXP-5/assets/160568927/5a093168-10f6-4f6c-b4f7-cdfa69e883d4)
 
 
-## Result:
+# OUTPUT:
 
-Hence the finite state machine has been simulated and synthesised using xilinx ISE.
+![Image](https://github.com/Prathosh7/VLSI-LAB-EXP-5/assets/168956572/c1737da1-3a86-4aa6-8441-ea507e908fb1)
 
+
+# RESULT:
+Thus,the simulation and synthesis of finite state machine by using vivado has been successfully excecuted and verified.
